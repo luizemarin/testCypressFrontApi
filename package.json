@@ -1,0 +1,25 @@
+{
+  "name": "testcypressfrontapi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luizemarin/testCypressFrontApi.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/luizemarin/testCypressFrontApi/issues"
+  },
+  "homepage": "https://github.com/luizemarin/testCypressFrontApi#readme",
+  "dependencies": {
+    "@testing-library/cypress": "^10.1.0",
+    "cypress": "^15.7.1"
+  }
+}
