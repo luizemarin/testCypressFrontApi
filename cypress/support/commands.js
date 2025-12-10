@@ -2,10 +2,11 @@
 
 import "@testing-library/cypress/add-commands";
 
-Cypress.Commands.add("setup", () => {
+Cypress.Commands.add("userLogin", () => {
     const nameUser = Cypress.env("nameUser");
     const email = Cypress.env("username");
     const password = Cypress.env("password");
+    const baseUrlFront = Cypress.env("frontUrl");
 
     cy.request("GET", `${Cypress.env("apiUrl")}/usuarios`).then((response) => {
         const userAlreadyExists = response.body.usuarios.some(
@@ -13,7 +14,7 @@ Cypress.Commands.add("setup", () => {
         );
 
         if (!userAlreadyExists) {
-            cy.visit("/");
+            cy.visit(baseUrlFront);
             cy.get('[data-testid="cadastrar"]').click();
 
             cy.get('[data-testid="nome"]').type(nameUser);
@@ -27,13 +28,15 @@ Cypress.Commands.add("setup", () => {
                 "be.visible"
             );
         }
+
+        cy.session([email, password], () => {
+            cy.visit(baseUrlFront);
+            cy.get('[data-testid="email"]').type(email);
+            cy.get('[data-testid="senha"]').type(password);
+            cy.get('[data-testid="entrar"]').click();
+            cy.url().should("include", "/admin/home");
+        });
     });
 
-    cy.session([email, password], () => {
-        cy.visit("/");
-        cy.get('[data-testid="email"]').type(email);
-        cy.get('[data-testid="password"]').type(password);
-        cy.get('[data-testid="entrar"]').click();
-        cy.url().should("include", "/admin/home");
-    });
+    cy.visit(`${baseUrlFront}/admin/home`);
 });
