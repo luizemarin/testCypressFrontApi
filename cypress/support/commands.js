@@ -40,3 +40,62 @@ Cypress.Commands.add("userLogin", () => {
 
     cy.visit(`${baseUrlFront}/admin/home`);
 });
+
+Cypress.Commands.add("excluirUsuario", (email) => {
+    cy.request({
+        method: "GET",
+        url: `${Cypress.env("apiUrl")}/usuarios`,
+        qs: { email: email },
+    }).then((response) => {
+        expect(response.status).to.eq(200);
+        const usuarios = response.body.usuarios;
+        const usuario = usuarios.find((u) => u.email === email);
+
+        if (usuario) {
+            cy.request({
+                method: "DELETE",
+                url: `${Cypress.env("apiUrl")}/usuarios/${usuario._id}`,
+            }).then((deleteResponse) => {
+                expect(deleteResponse.status).to.eq(200);
+            });
+        }
+    });
+});
+
+Cypress.Commands.add("excluirProduto", (nomeProduto) => {
+    const email = Cypress.env("username");
+    const password = Cypress.env("password");
+
+    cy.request({
+        method: "POST",
+        url: `${Cypress.env("apiUrl")}/login`,
+        body: {
+            email: email,
+            password: password,
+        },
+    }).then((loginResponse) => {
+        const token = loginResponse.body.authorization;
+
+        cy.request({
+            method: "GET",
+            url: `${Cypress.env("apiUrl")}/produtos`,
+            qs: { nome: nomeProduto },
+        }).then((response) => {
+            expect(response.status).to.eq(200);
+            const produtos = response.body.produtos;
+            const produto = produtos.find((p) => p.nome === nomeProduto);
+
+            if (produto) {
+                cy.request({
+                    method: "DELETE",
+                    url: `${Cypress.env("apiUrl")}/produtos/${produto._id}`,
+                    headers: {
+                        authorization: token,
+                    },
+                }).then((deleteResponse) => {
+                    expect(deleteResponse.status).to.eq(200);
+                });
+            }
+        });
+    });
+});
