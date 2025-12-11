@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "cy:open": "npx cypress open"
+    "cy:open": "npx cypress open",
+    "cy:run": "npx cypress run",
+    "cy:front": "npx cypress run --spec cypress/e2e/frontend/tests/",
+    "cy:back": "npx cypress run --spec cypress/e2e/backend/tests/"
   },
   "repository": {
     "type": "git",
